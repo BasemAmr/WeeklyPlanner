@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    direction: rtl;
+  }
+}
+
+/* Custom Highlights */
+.task-highlight-yellow {
+  @apply bg-orange-100;
+}
+
+.task-highlight-cyan {
+  @apply bg-cyan-100;
+}
+
+.task-highlight-pink {
+  @apply bg-pink-100;
+}
+
+.task-highlight-green {
+  @apply bg-lime-200;
+}
+
+.task-highlight-purple {
+  @apply bg-purple-200;
+}
+
+.task-highlight-orange {
+  @apply bg-orange-200;
+}
+
+/* Ruled Paper Effect */
+/* Ruled Paper Effect */
+.ruled-paper {
+  background-image: linear-gradient(transparent 95%, #e5e5e5 95%);
+  background-size: 100% 3rem;
+  background-position: 0 0;
+  /* Align lines to the bottom of the 3rem block */
+  background-attachment: local;
+}
+
+/* Dreamy Scroll (Hide scrollbar) */
+.dreamy-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.dreamy-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Empty line styles */
+.empty-line:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  cursor: text;
+}
+
+/* Embla Carousel Styles */
+.embla {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.embla__container {
+  display: flex;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.embla--vertical .embla__container {
+  flex-direction: column;
+  height: 100%;
+  touch-action: pan-y pinch-zoom;
+}
+
+.embla--horizontal .embla__container {
+  flex-direction: row;
+  height: 100%;
+  touch-action: pan-x pinch-zoom;
+}
+
+.embla--vertical .embla__slide {
+  min-height: 100%;
+  flex: 0 0 100%;
+}
+
+.embla--horizontal .embla__slide {
+  /* Flex basis handled by component width classes */
+  height: 100%;
+}

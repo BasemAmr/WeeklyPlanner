@@ -1,0 +1,19 @@
+{
+  "name": "مخطط الأسبوع",
+  "short_name": "Week Planner",
+  "description": "تطبيق بسيط وفعال لإدارة مهامك الأسبوعية",
+  "theme_color": "#ffffff",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
