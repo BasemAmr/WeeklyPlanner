@@ -107,28 +107,30 @@ function App() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto">
+            <div className="flex items-center justify-between md:justify-end gap-1.5 md:gap-2 w-full md:w-auto">
               {/* Navigation Controls */}
-              <div className="flex items-center justify-center flex-1 md:flex-none bg-neutral-50 rounded-lg border border-neutral-200 p-1 mx-2">
-                <Button variant="ghost" size="icon" className="btn-touch" onClick={goToPreviousWeek}>
-                  <ChevronRight className="h-5 w-5" />
+              <div className="flex items-center justify-center flex-1 md:flex-none bg-neutral-50 rounded-lg border border-neutral-200 p-1 mx-1 md:mx-2 min-w-0">
+                <Button variant="ghost" size="icon" className="btn-touch h-8 w-8 min-h-[32px] min-w-[32px]" onClick={goToPreviousWeek}>
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
-                <div className="text-center px-2 sm:px-4 min-w-[120px] sm:min-w-[160px]">
+                <div className="text-center px-1 sm:px-4 min-w-[100px] sm:min-w-[160px] truncate">
                   <p className="text-[10px] sm:text-xs font-medium text-neutral-400">{new Date().getFullYear()}</p>
-                  <p className="text-xs sm:text-sm font-bold text-neutral-900">{weekRange}</p>
+                  <p className="text-xs sm:text-sm font-bold text-neutral-900 truncate">{weekRange}</p>
                 </div>
-                <Button variant="ghost" size="icon" className="btn-touch" onClick={goToNextWeek}>
-                  <ChevronLeft className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="btn-touch h-8 w-8 min-h-[32px] min-w-[32px]" onClick={goToNextWeek}>
+                  <ChevronLeft className="h-4 w-4" />
                 </Button>
               </div>
 
-              <Button variant="outline" size="sm" onClick={goToToday} className="gap-2 h-11 px-4">
-                <Calendar className="h-4 w-4" />
-                <span className="hidden sm:inline">اليوم</span>
-              </Button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Button variant="outline" size="sm" onClick={goToToday} className="gap-2 h-10 px-3 md:h-11 md:px-4 border-dashed">
+                  <Calendar className="h-4 w-4" />
+                  <span className="hidden sm:inline">اليوم</span>
+                </Button>
 
-              <ImportExportPanel currentWeek={weekData} onImportComplete={refresh} />
-              <SettingsModal />
+                <ImportExportPanel currentWeek={weekData} onImportComplete={refresh} />
+                <SettingsModal />
+              </div>
             </div>
           </div>
 
@@ -149,7 +151,7 @@ function App() {
       {/* Main Content Area */}
       <main className="layout-main">
         {viewMode === 'week' ? (
-          <div className={cn("embla", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={emblaRef}>
+          <div className={cn("embla h-full", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={emblaRef}>
             <div className="embla__container p-4 md:px-8 h-full gap-4 md:gap-6">
               {weekData.days.map((day: Day, index: number) => (
                 <DayColumn

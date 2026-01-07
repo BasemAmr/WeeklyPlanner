@@ -55,7 +55,7 @@ export function Onboarding() {
     ]
 
     return (
-        <div className="flex flex-col h-[100dvh] w-full bg-neutral-50 text-neutral-900 overflow-hidden" dir="rtl">
+        <div className="fixed inset-0 z-50 flex flex-col bg-neutral-50 text-neutral-900 overflow-hidden" dir="rtl">
 
             {/* Progress Dots */}
             <div className="flex-none pt-8 pb-2 flex justify-center gap-2 z-10 shrink-0">
