@@ -53,7 +53,7 @@ export function DayColumn({
       onClick={() => onSelect?.()}
       className={cn(
         // Base layout
-        "flex flex-col h-full bg-white/50 backdrop-blur-sm transition-transform duration-300 embla__slide cursor-pointer",
+        "flex flex-col h-full min-h-full bg-white/50 backdrop-blur-sm transition-transform duration-300 embla__slide cursor-pointer",
         // Borders
         "border-b md:border-b-0 md:border-l border-neutral-100 last:border-l-0",
         // Spacing

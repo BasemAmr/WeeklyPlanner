@@ -152,7 +152,10 @@ function App() {
       <main className="layout-main">
         {viewMode === 'week' ? (
           <div className={cn("embla h-full", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={emblaRef}>
-            <div className="embla__container p-4 md:px-8 h-full gap-4 md:gap-6">
+            <div className={cn(
+              "embla__container h-full p-4 md:px-8",
+              sliderMode === 'vertical' ? "gap-0" : "gap-4 md:gap-6"
+            )}>
               {weekData.days.map((day: Day, index: number) => (
                 <DayColumn
                   key={day.date}
