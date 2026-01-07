@@ -1,18 +1,12 @@
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Calendar, Plus, List, LayoutGrid } from 'lucide-react'
-import { Button } from './components/ui/button'
-import { DayColumn } from './components/DayColumn'
-import { FieldListView } from './components/FieldListView'
-import { ImportExportPanel } from './components/ImportExportPanel'
-import { DayPicker } from './components/DayPicker'
-import { SliderModeToggle } from './components/SliderModeToggle'
-import { SettingsModal } from './components/SettingsModal'
-import { Onboarding } from './components/Onboarding'
-import { useWeekData } from './hooks/useWeekData'
-import { useWeekSlider } from './hooks/useWeekSlider'
-import { useSettings } from './contexts/SettingsContext'
-import { Day, FieldList, SliderMode } from './types'
-import { cn } from './lib/utils'
+import { Button } from '@/design-system/components'
+import { DayColumn, DayPicker, SliderModeToggle } from '@/features/week-planner'
+import { FieldListView, ImportExportPanel, SettingsModal, Onboarding } from '@/shared/components'
+import { useWeekData, useWeekSlider } from '@/features/week-planner'
+import { useSettings } from '@/contexts/SettingsContext'
+import { Day, FieldList, SliderMode } from '@/shared/types'
+import { cn } from '@/lib/utils'
 
 function App() {
   const [viewMode, setViewMode] = useState<'week' | 'lists'>('week')
@@ -75,12 +69,12 @@ function App() {
   }
 
   return (
-    <div className="h-screen w-screen bg-neutral-50 overflow-hidden flex flex-col" dir="rtl">
+    <div className="layout-container" dir="rtl">
       {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-transparent to-transparent" />
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-40 border-b border-neutral-100 shadow-sm transition-all duration-300">
+      <header className="layout-header">
         <div className="max-w-[1920px] mx-auto">
           {/* Top Bar */}
           <div className="px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0 border-b border-neutral-50/50">
@@ -93,21 +87,21 @@ function App() {
                 <button
                   onClick={() => setViewMode('week')}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                    "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all min-h-[40px]",
                     viewMode === 'week' ? "bg-white shadow-sm text-neutral-900" : "text-neutral-500 hover:text-neutral-900"
                   )}
                 >
-                  <LayoutGrid className="h-4 w-4" />
+                  <LayoutGrid className="h-5 w-5" />
                   <span className="hidden sm:inline">الأسبوع</span>
                 </button>
                 <button
                   onClick={() => setViewMode('lists')}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                    "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all min-h-[40px]",
                     viewMode === 'lists' ? "bg-white shadow-sm text-neutral-900" : "text-neutral-500 hover:text-neutral-900"
                   )}
                 >
-                  <List className="h-4 w-4" />
+                  <List className="h-5 w-5" />
                   <span className="hidden sm:inline">قوائم إضافية</span>
                 </button>
               </div>
@@ -116,19 +110,19 @@ function App() {
             <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto">
               {/* Navigation Controls */}
               <div className="flex items-center justify-center flex-1 md:flex-none bg-neutral-50 rounded-lg border border-neutral-200 p-1 mx-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToPreviousWeek}>
-                  <ChevronRight className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="btn-touch" onClick={goToPreviousWeek}>
+                  <ChevronRight className="h-5 w-5" />
                 </Button>
                 <div className="text-center px-2 sm:px-4 min-w-[120px] sm:min-w-[160px]">
                   <p className="text-[10px] sm:text-xs font-medium text-neutral-400">{new Date().getFullYear()}</p>
                   <p className="text-xs sm:text-sm font-bold text-neutral-900">{weekRange}</p>
                 </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToNextWeek}>
-                  <ChevronLeft className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="btn-touch" onClick={goToNextWeek}>
+                  <ChevronLeft className="h-5 w-5" />
                 </Button>
               </div>
 
-              <Button variant="outline" size="sm" onClick={goToToday} className="gap-2 h-10 px-3">
+              <Button variant="outline" size="sm" onClick={goToToday} className="gap-2 h-11 px-4">
                 <Calendar className="h-4 w-4" />
                 <span className="hidden sm:inline">اليوم</span>
               </Button>
@@ -153,7 +147,7 @@ function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 relative w-full h-full overflow-hidden pt-[180px] md:pt-[160px]">
+      <main className="layout-main">
         {viewMode === 'week' ? (
           <div className={cn("embla", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={emblaRef}>
             <div className="embla__container p-4 md:px-8 h-full gap-4 md:gap-6">
@@ -166,7 +160,7 @@ function App() {
                   onUpdateEntry={updateEntry}
                   onDeleteEntry={deleteEntry}
                   onColorChange={changeEntryColor}
-                  onSelect={() => scrollTo(index)}
+                  onSelect={() => scrollTo(index )}
                   isHighlighted={index === selectedIndex}
                 />
               ))}
