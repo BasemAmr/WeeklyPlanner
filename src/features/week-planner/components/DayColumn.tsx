@@ -59,7 +59,7 @@ export function DayColumn({
         // Spacing
         "px-0 pt-6 snap-center",
         // Responsive Widths - Force single column on mobile/tablet portrait (<768px)
-        "w-full md:w-[320px] md:min-w-[320px] flex-shrink-0",
+        "w-full h-full md:w-[320px] md:min-w-[320px] flex-shrink-0 relative",
         // Highlight state
         isHighlighted ? "bg-white/80 md:bg-white shadow-[0_0_30px_-10px_rgba(0,0,0,0.1)] z-10 md:scale-[1.02] md:border-l-2 md:border-neutral-200" : "",
         className
