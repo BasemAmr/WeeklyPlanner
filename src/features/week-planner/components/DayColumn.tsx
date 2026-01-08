@@ -84,7 +84,14 @@ export function DayColumn({
           />
         ))}
 
-        <div className="flex items-end gap-2 px-4 group h-[3rem] pb-1">
+        <form
+          className="flex items-end gap-2 px-4 group h-[3rem] pb-1"
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            handleAddEntry()
+          }}
+        >
           <input
             ref={inputRef}
             value={newEntryText}
@@ -93,8 +100,7 @@ export function DayColumn({
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.stopPropagation()
-                e.preventDefault()
-                handleAddEntry()
+                // Don't prevent default - let form handle it
               }
             }}
             placeholder="أضف مهمة..."
@@ -102,7 +108,7 @@ export function DayColumn({
             dir="auto"
           />
           <Plus className="h-5 w-5 mb-1.5 text-neutral-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
-        </div>
+        </form>
 
         {/* Infinite empty lines filler */}
         <div className="flex-1 empty-line" />

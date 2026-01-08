@@ -176,7 +176,7 @@ function App() {
 
         {/* Week View (Days) */}
         {viewMode === 'week' && (
-          <div className={cn("embla h-full pt-14 pb-36 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={daySlider.emblaRef}>
+          <div className={cn("embla h-full pt-14 pb-24 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={daySlider.emblaRef}>
             <div className={cn(
               "embla__container h-full px-0 md:px-8",
               sliderMode === 'vertical' ? "gap-0" : "gap-0 md:gap-6"
@@ -200,7 +200,7 @@ function App() {
 
         {/* Field Lists View - Now also using Embla! */}
         {viewMode === 'lists' && (
-          <div className={cn("embla h-full pt-14 pb-36 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={listSlider.emblaRef}>
+          <div className={cn("embla h-full pt-14 pb-24 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={listSlider.emblaRef}>
             <div className={cn(
               "embla__container h-full px-0 md:px-8",
               sliderMode === 'vertical' ? "gap-0 flex-col" : "gap-0 md:gap-6 flex-row"
