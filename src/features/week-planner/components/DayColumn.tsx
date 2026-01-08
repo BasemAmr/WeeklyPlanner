@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Plus } from 'lucide-react'
 import { EntryItem } from './EntryItem'
 import { Day, TaskColor } from '@/shared/types'
@@ -49,21 +49,31 @@ export function DayColumn({
     }
   }
 
+  /* 
+     Robust Scroll Logic: 
+     1. Use Visual Viewport API to detect when keyboard resizes screen.
+     2. Ensure sufficient bottom padding so we actually have space to scroll.
+  */
+  useEffect(() => {
+    if (!window.visualViewport) return
+
+    const handleResize = () => {
+      // When viewport shrinks (keyboard open) AND we are focused, scroll to input
+      if (document.activeElement === inputRef.current) {
+        inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+
+    window.visualViewport.addEventListener('resize', handleResize)
+    return () => window.visualViewport?.removeEventListener('resize', handleResize)
+  }, [])
+
   const scrollToInput = () => {
-    // Attempt scroll multiple times to handle keyboard animation/viewport resize
-    const attempts = [100, 300, 500]
-    attempts.forEach(delay => {
-      setTimeout(() => {
-        // Method 1: ScrollIntoView
-        if (inputRef.current) {
-          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }
-        // Method 2: Force container to scroll to bottom (where input is) - acts as fallback
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
-        }
-      }, delay)
-    })
+    // Immediate attempt
+    if (inputRef.current) {
+      inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    // Fallback: visualViewport listener will catch the late resize
   }
 
   const handleAddEntry = () => {
@@ -101,7 +111,9 @@ export function DayColumn({
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto slim-scrollbar pt-[0.4rem] pb-20"
+        // Drastically increased padding (pb-[40vh]) to ensure we have scrollable space 
+        // when keyboard pushes up. This "cushion" allows the input to be scrolled to center.
+        className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto slim-scrollbar pt-[0.4rem] pb-[40vh]"
         onMouseDown={handleEmptySpaceMouseDown}
       >
         {day.entries.map(entry => (
@@ -117,7 +129,7 @@ export function DayColumn({
         ))}
 
         <form
-          className="flex items-end gap-2 px-4 pr-14 group h-[3rem] pb-1"
+          className="flex items-center gap-2 px-4 pr-14 group h-[3rem]"
           onSubmit={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -144,10 +156,10 @@ export function DayColumn({
               }
             }}
             placeholder="أضف مهمة..."
-            className="flex-1 bg-transparent border-none outline-none text-xl md:text-base leading-[3rem] placeholder:text-neutral-400/50"
+            className="flex-1 bg-transparent border-none outline-none text-xl md:text-base h-full placeholder:text-neutral-400/50"
             dir="auto"
           />
-          <Plus className="h-5 w-5 mb-1.5 text-neutral-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
+          <Plus className="h-5 w-5 text-neutral-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
         </form>
 
         {/* Infinite empty lines filler */}
