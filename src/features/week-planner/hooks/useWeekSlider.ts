@@ -8,6 +8,7 @@ export function useWeekSlider(
     onSlideChange?: (index: number) => void
 ) {
     const [emblaRef, emblaApi] = useEmblaCarousel({
+        startIndex: initialIndex,
         axis: mode === 'vertical' ? 'y' : 'x',
         align: 'center', // Center alignment so the selected day is in the middle
         containScroll: false,

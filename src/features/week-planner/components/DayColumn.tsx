@@ -70,7 +70,7 @@ export function DayColumn({
       </div>
 
       <div
-        className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto dreamy-scroll"
+        className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto dreamy-scroll pt-[0.4rem]"
         onClick={handleEmptySpaceClick}
       >
         {day.entries.map(entry => (
@@ -94,10 +94,10 @@ export function DayColumn({
               if (e.key === 'Enter') handleAddEntry()
             }}
             placeholder="أضف مهمة..."
-            className="flex-1 bg-transparent border-none outline-none text-sm md:text-base placeholder:text-neutral-400/50"
+            className="flex-1 bg-transparent border-none outline-none text-xl md:text-base placeholder:text-neutral-400/50"
             dir="auto"
           />
-          <Plus className="h-5 w-5 mb-0.5 text-neutral-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
+          <Plus className="h-5 w-5 mb-1.5 text-neutral-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
         </div>
 
         {/* Infinite empty lines filler */}
