@@ -29,6 +29,7 @@ interface ActionMenuProps {
 
 function ActionMenu({ entry, position, onClose, onToggle, onDelete, onColorChange, onEditStart }: ActionMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,73 +55,110 @@ function ActionMenu({ entry, position, onClose, onToggle, onDelete, onColorChang
       className="fixed z-[9999] bg-white rounded-xl shadow-xl border border-neutral-200 p-3 flex flex-col gap-3 min-w-[280px] w-full max-w-[320px] animate-in fade-in zoom-in-95 duration-150 origin-top-left"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="text-base text-neutral-900 break-words leading-relaxed max-h-[150px] overflow-y-auto pr-1">
-        {entry.text}
+      {/* Header with close button */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="text-base text-neutral-900 break-words leading-relaxed max-h-[100px] overflow-y-auto pr-1 flex-1">
+          {entry.text}
+        </div>
+        <button
+          onClick={onClose}
+          className="h-8 w-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center flex-shrink-0 transition-colors"
+        >
+          <X className="h-4 w-4 text-neutral-500" />
+        </button>
       </div>
 
       <div className="h-px bg-neutral-100" />
 
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-1.5 flex-wrap justify-start">
-          {TASK_COLORS.map(color => (
-            <button
-              key={color.value}
-              className={cn(
-                "h-8 w-8 rounded-full border transition-all hover:scale-110 active:scale-95",
-                entry.color === color.value ? "border-neutral-900 ring-2 ring-neutral-900 ring-offset-2" : "border-neutral-200",
-                color.value === 'yellow' && 'bg-amber-300',
-                color.value === 'cyan' && 'bg-cyan-300',
-                color.value === 'pink' && 'bg-pink-300',
-                color.value === 'green' && 'bg-green-300',
-                color.value === 'purple' && 'bg-purple-300',
-                color.value === 'orange' && 'bg-orange-300',
-                color.value === 'none' && 'bg-white'
-              )}
-              onClick={() => onColorChange(color.value)}
-              title={color.label}
-            />
-          ))}
-        </div>
-
-        <div className="flex gap-2 justify-between items-center">
-          <div className="flex gap-2 flex-1">
+      {/* Delete confirmation overlay */}
+      {showDeleteConfirm ? (
+        <div className="flex flex-col gap-2 py-2">
+          <p className="text-sm text-neutral-600 text-center">حذف هذه المهمة؟</p>
+          <div className="flex gap-2">
             <Button
               size="sm"
-              variant={entry.completed ? "outline" : "default"}
-              onClick={onToggle}
-              className="h-9 flex-1"
+              variant="outline"
+              onClick={() => setShowDeleteConfirm(false)}
+              className="flex-1 h-10"
             >
-              {entry.completed ? (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  Completed
-                </>
-              ) : (
-                "Mark Complete"
-              )}
+              إلغاء
             </Button>
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => {
+                onDelete()
+                onClose()
+              }}
+              className="flex-1 h-10"
+            >
+              حذف
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-1.5 flex-wrap justify-start">
+            {TASK_COLORS.map(color => (
+              <button
+                key={color.value}
+                className={cn(
+                  "h-8 w-8 rounded-full border transition-all hover:scale-110 active:scale-95",
+                  entry.color === color.value ? "border-neutral-900 ring-2 ring-neutral-900 ring-offset-2" : "border-neutral-200",
+                  color.value === 'yellow' && 'bg-amber-300',
+                  color.value === 'cyan' && 'bg-cyan-300',
+                  color.value === 'pink' && 'bg-pink-300',
+                  color.value === 'green' && 'bg-green-300',
+                  color.value === 'purple' && 'bg-purple-300',
+                  color.value === 'orange' && 'bg-orange-300',
+                  color.value === 'none' && 'bg-white'
+                )}
+                onClick={() => onColorChange(color.value)}
+                title={color.label}
+              />
+            ))}
+          </div>
+
+          <div className="flex gap-2 justify-between items-center">
+            <div className="flex gap-2 flex-1">
+              <Button
+                size="sm"
+                variant={entry.completed ? "outline" : "default"}
+                onClick={onToggle}
+                className="h-9 flex-1"
+              >
+                {entry.completed ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Completed
+                  </>
+                ) : (
+                  "Mark Complete"
+                )}
+              </Button>
+
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={onEditStart}
+                className="h-9 px-2"
+              >
+                <Pencil className="h-4 w-4 mr-1" />
+                Edit
+              </Button>
+            </div>
 
             <Button
               size="sm"
               variant="ghost"
-              onClick={onEditStart}
-              className="h-9 px-2"
+              className="h-9 w-9 text-red-500 hover:bg-red-50 hover:text-red-600"
+              onClick={() => setShowDeleteConfirm(true)}
             >
-              <Pencil className="h-4 w-4 mr-1" />
-              Edit
+              <X className="h-4 w-4" />
             </Button>
           </div>
-
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-9 w-9 text-red-500 hover:bg-red-50 hover:text-red-600"
-            onClick={onDelete}
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </div>
-      </div>
+      )}
     </div>,
     document.body
   )
