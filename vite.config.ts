@@ -26,8 +26,8 @@ export default defineConfig({
             purpose: 'any maskable'
           }
         ],
-        start_url: '/',
-        scope: '/'
+        start_url: '/WeeklyPlanner/',
+        scope: '/WeeklyPlanner/'
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
