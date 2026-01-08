@@ -70,7 +70,7 @@ export function DayColumn({
       </div>
 
       <div
-        className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto dreamy-scroll pt-[0.4rem]"
+        className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto slim-scrollbar pt-[0.4rem] pb-20"
         onClick={handleEmptySpaceClick}
       >
         {day.entries.map(entry => (

@@ -195,10 +195,12 @@ export function EntryItem({
         draggable={draggable}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onClick={() => {
+        onMouseDown={(e) => e.stopPropagation()} // Prevent document click from closing menu immediately
+        onClick={(e) => {
+          e.stopPropagation()
           if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
           updatePosition()
-          setIsMenuOpen(true)
+          setIsMenuOpen(prev => !prev) // Toggle state instead of just setting true
         }}
       >
         {draggable && (

@@ -143,6 +143,43 @@
   display: none;
 }
 
+/* Slim Scrollbar - Subtle rectangular indicator */
+.slim-scrollbar {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.slim-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.slim-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+  margin: 8px 0;
+}
+
+.slim-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.slim-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Hide scrollbar when not scrolling (optional fade effect) */
+.slim-scrollbar::-webkit-scrollbar-thumb:vertical {
+  min-height: 30px;
+}
+
+.slim-scrollbar::-webkit-scrollbar-thumb:horizontal {
+  min-width: 30px;
+}
+
 /* Empty line styles */
 .empty-line:hover {
   background-color: rgba(0, 0, 0, 0.02);
