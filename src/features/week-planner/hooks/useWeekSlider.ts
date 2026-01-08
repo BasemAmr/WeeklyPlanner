@@ -13,7 +13,7 @@ export function useWeekSlider(
         align: 'center', // Center alignment so the selected day is in the middle
         containScroll: false,
         direction: 'rtl', // Important for Arabic RTL
-        skipSnaps: false, // Snap to each slide one at a time
+        skipSnaps: true, // Allow scrolling multiple slides with momentum
         dragFree: false, // Ensure we always snap to a slide
     })
 
