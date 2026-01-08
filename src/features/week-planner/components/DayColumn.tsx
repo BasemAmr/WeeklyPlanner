@@ -91,7 +91,11 @@ export function DayColumn({
             onChange={(e) => setNewEntryText(e.target.value)}
             onBlur={handleAddEntry}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') handleAddEntry()
+              if (e.key === 'Enter') {
+                e.stopPropagation()
+                e.preventDefault()
+                handleAddEntry()
+              }
             }}
             placeholder="أضف مهمة..."
             className="flex-1 bg-transparent border-none outline-none text-xl md:text-base placeholder:text-neutral-400/50"

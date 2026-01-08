@@ -176,10 +176,10 @@ function App() {
 
         {/* Week View (Days) */}
         {viewMode === 'week' && (
-          <div className={cn("embla h-full pt-16 pb-40 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={daySlider.emblaRef}>
+          <div className={cn("embla h-full pt-14 pb-36 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={daySlider.emblaRef}>
             <div className={cn(
-              "embla__container h-full p-4 md:px-8",
-              sliderMode === 'vertical' ? "gap-0" : "gap-4 md:gap-6"
+              "embla__container h-full px-0 md:px-8",
+              sliderMode === 'vertical' ? "gap-0" : "gap-0 md:gap-6"
             )}>
               {weekData!.days.map((day: Day, index: number) => (
                 <DayColumn
@@ -200,10 +200,10 @@ function App() {
 
         {/* Field Lists View - Now also using Embla! */}
         {viewMode === 'lists' && (
-          <div className={cn("embla h-full pt-16 pb-40 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={listSlider.emblaRef}>
+          <div className={cn("embla h-full pt-14 pb-36 md:py-0", sliderMode === 'vertical' ? 'embla--vertical' : 'embla--horizontal')} ref={listSlider.emblaRef}>
             <div className={cn(
-              "embla__container h-full p-4 md:px-8",
-              sliderMode === 'vertical' ? "gap-4 flex-col" : "gap-4 md:gap-6 flex-row"
+              "embla__container h-full px-0 md:px-8",
+              sliderMode === 'vertical' ? "gap-0 flex-col" : "gap-0 md:gap-6 flex-row"
             )}>
               {/* 
                      Field Lists typically don't take full width in Horizontal mode on desktop?

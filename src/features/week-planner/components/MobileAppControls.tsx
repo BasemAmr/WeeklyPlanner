@@ -36,9 +36,9 @@ export function MobileAppControls({
         return () => window.removeEventListener('resize', checkTablet)
     }, [])
 
-    // Auto-scroll to selected item (for list picker)
+    // Auto-scroll to selected item (for tablet list picker)
     useEffect(() => {
-        if (scrollRef.current) {
+        if (scrollRef.current && isTablet) {
             const selectedElement = scrollRef.current.children[selectedIndex] as HTMLElement
             if (selectedElement) {
                 const container = scrollRef.current
@@ -46,16 +46,16 @@ export function MobileAppControls({
                 container.scrollTo({ left: scrollLeft, behavior: 'smooth' })
             }
         }
-    }, [selectedIndex, viewMode])
+    }, [selectedIndex, viewMode, isTablet])
 
-    // ===== PHONE: Side Rail (Vertical edge tabs) =====
-    if (!isTablet && viewMode === 'week') {
-        return (
-            <>
-                {/* Side Rail - Right edge for RTL */}
+    // ===== PHONE: Side Rail (Vertical edge tabs) for BOTH week and lists =====
+    if (!isTablet) {
+        // Week view - show day numbers
+        if (viewMode === 'week') {
+            return (
                 <div className={cn(
-                    "fixed right-0 top-1/2 -translate-y-1/2 z-[60] flex flex-col gap-1 py-2 px-1",
-                    "bg-white/90 backdrop-blur-md shadow-lg border-l border-neutral-200/60 rounded-l-xl",
+                    "fixed right-0 top-1/2 -translate-y-1/2 z-[60] flex flex-col gap-0.5 py-1.5 px-0.5",
+                    "bg-white/95 backdrop-blur-md shadow-lg border-l border-neutral-200/60 rounded-l-lg",
                     className
                 )}>
                     {days.map((day, index) => {
@@ -69,78 +69,79 @@ export function MobileAppControls({
                                 key={day.date}
                                 onClick={() => onSelect(index)}
                                 className={cn(
-                                    "flex flex-col items-center justify-center w-9 h-10 rounded-lg transition-all",
+                                    "flex flex-col items-center justify-center w-8 h-9 rounded-md transition-all",
                                     isSelected
-                                        ? "bg-neutral-900 text-white shadow-md scale-105"
+                                        ? "bg-neutral-900 text-white shadow-md"
                                         : "text-neutral-500 hover:bg-neutral-100 active:bg-neutral-200"
                                 )}
                             >
-                                <span className="text-[9px] leading-none opacity-70">{dayName}</span>
-                                <span className="text-[12px] leading-tight font-bold">{dayNum}</span>
+                                <span className="text-[8px] leading-none opacity-70">{dayName}</span>
+                                <span className="text-[11px] leading-tight font-bold">{dayNum}</span>
                             </button>
                         )
                     })}
 
                     {/* Slider mode toggle at bottom of rail */}
-                    <div className="w-full h-px bg-neutral-200 my-1" />
+                    <div className="w-full h-px bg-neutral-200 my-0.5" />
                     <button
                         onClick={() => onSliderModeChange(sliderMode === 'vertical' ? 'horizontal' : 'vertical')}
-                        className="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center active:scale-95 transition-transform"
+                        className="w-8 h-8 rounded-md bg-neutral-100 flex items-center justify-center active:scale-95 transition-transform"
                     >
                         {sliderMode === 'vertical' ? (
-                            <Columns className="h-4 w-4 text-neutral-600" />
+                            <Columns className="h-3.5 w-3.5 text-neutral-600" />
                         ) : (
-                            <AlignJustify className="h-4 w-4 text-neutral-600 rotate-90" />
+                            <AlignJustify className="h-3.5 w-3.5 text-neutral-600 rotate-90" />
                         )}
                     </button>
                 </div>
-            </>
-        )
-    }
+            )
+        }
 
-    // ===== PHONE + Lists Mode: Floating bottom pill for list selection =====
-    if (!isTablet && viewMode === 'lists') {
+        // Lists view - show list names (truncated for long names)
         return (
-            <div className={cn("fixed bottom-24 left-4 right-4 h-10 flex items-center justify-center gap-2 z-[60] pointer-events-none", className)}>
-                <div className="flex-1 max-w-xs mx-auto h-full bg-white/95 backdrop-blur-md rounded-full shadow-md border border-neutral-200/60 flex items-center overflow-hidden pointer-events-auto px-1">
-                    <div
-                        ref={scrollRef}
-                        className="flex-1 flex items-center gap-2 overflow-x-auto dreamy-scroll h-full px-2"
-                        dir="rtl"
-                    >
-                        {fieldLists.length === 0 ? (
-                            <span className="text-xs text-neutral-400 px-2 italic w-full text-center">لا توجد قوائم</span>
-                        ) : (
-                            fieldLists.map((list, index) => {
-                                const isSelected = index === selectedIndex
-                                return (
-                                    <button
-                                        key={list.id}
-                                        onClick={() => onSelect(index)}
-                                        className={cn(
-                                            "flex-shrink-0 px-3 py-1 rounded-full text-[10px] font-bold transition-all whitespace-nowrap border",
-                                            isSelected
-                                                ? "bg-neutral-900 text-white border-neutral-900 shadow-sm"
-                                                : "bg-white text-neutral-600 border-neutral-200 hover:border-neutral-300"
-                                        )}
-                                    >
-                                        {list.title}
-                                    </button>
-                                )
-                            })
-                        )}
+            <div className={cn(
+                "fixed right-0 top-1/2 -translate-y-1/2 z-[60] flex flex-col gap-0.5 py-1.5 px-0.5",
+                "bg-white/95 backdrop-blur-md shadow-lg border-l border-neutral-200/60 rounded-l-lg max-h-[70vh] overflow-y-auto slim-scrollbar",
+                className
+            )}>
+                {fieldLists.length === 0 ? (
+                    <div className="w-10 h-10 flex items-center justify-center">
+                        <span className="text-[8px] text-neutral-400 [writing-mode:vertical-rl] rotate-180">لا قوائم</span>
                     </div>
-                </div>
+                ) : (
+                    fieldLists.map((list, index) => {
+                        const isSelected = index === selectedIndex
+                        // Get first 2 characters for compact display
+                        const shortName = list.title.slice(0, 2)
 
-                {/* Slider Toggle */}
+                        return (
+                            <button
+                                key={list.id}
+                                onClick={() => onSelect(index)}
+                                title={list.title} // Full name on hover/long-press
+                                className={cn(
+                                    "flex items-center justify-center w-10 h-9 rounded-md transition-all",
+                                    isSelected
+                                        ? "bg-neutral-900 text-white shadow-md"
+                                        : "text-neutral-600 hover:bg-neutral-100 active:bg-neutral-200"
+                                )}
+                            >
+                                <span className="text-[11px] font-bold truncate px-0.5">{shortName}</span>
+                            </button>
+                        )
+                    })
+                )}
+
+                {/* Slider mode toggle at bottom of rail */}
+                <div className="w-full h-px bg-neutral-200 my-0.5" />
                 <button
                     onClick={() => onSliderModeChange(sliderMode === 'vertical' ? 'horizontal' : 'vertical')}
-                    className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-md shadow-md border border-neutral-200/60 flex items-center justify-center pointer-events-auto active:scale-95 transition-transform flex-shrink-0"
+                    className="w-10 h-8 rounded-md bg-neutral-100 flex items-center justify-center active:scale-95 transition-transform"
                 >
                     {sliderMode === 'vertical' ? (
-                        <Columns className="h-4 w-4 text-neutral-700" />
+                        <Columns className="h-3.5 w-3.5 text-neutral-600" />
                     ) : (
-                        <AlignJustify className="h-4 w-4 text-neutral-700 rotate-90" />
+                        <AlignJustify className="h-3.5 w-3.5 text-neutral-600 rotate-90" />
                     )}
                 </button>
             </div>
@@ -193,7 +194,7 @@ export function MobileAppControls({
                                         key={list.id}
                                         onClick={() => onSelect(index)}
                                         className={cn(
-                                            "flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border",
+                                            "flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border max-w-[120px] truncate",
                                             isSelected
                                                 ? "bg-neutral-900 text-white border-neutral-900 shadow-sm"
                                                 : "bg-white text-neutral-600 border-neutral-200 hover:border-neutral-300"
