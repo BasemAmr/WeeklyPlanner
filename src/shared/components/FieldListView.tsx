@@ -32,12 +32,13 @@ export function FieldListView({
   onColorChange
 }: FieldListViewProps) {
   const [newEntryText, setNewEntryText] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleText, setTitleText] = useState(list.title)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleEmptySpaceClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line')) {
+    if (!isFocused && (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line'))) {
       inputRef.current?.focus()
     }
   }
@@ -119,7 +120,7 @@ export function FieldListView({
         ))}
 
         <form
-          className="flex items-end gap-2 px-4 group h-[3rem] pb-1"
+          className="flex items-end gap-2 px-4 pr-14 group h-[3rem] pb-1"
           onSubmit={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -130,14 +131,18 @@ export function FieldListView({
             ref={inputRef}
             value={newEntryText}
             onChange={(e) => setNewEntryText(e.target.value)}
-            onBlur={handleAddEntry}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              setIsFocused(false)
+              handleAddEntry()
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.stopPropagation()
               }
             }}
             placeholder="أضف مهمة..."
-            className="flex-1 bg-transparent border-none outline-none text-sm md:text-base placeholder:text-neutral-400/50"
+            className="flex-1 bg-transparent border-none outline-none text-xl md:text-base leading-[3rem] placeholder:text-neutral-400/50"
             dir="auto"
           />
           <Plus className="h-5 w-5 mb-0.5 text-neutral-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
