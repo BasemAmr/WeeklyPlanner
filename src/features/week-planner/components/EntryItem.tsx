@@ -141,6 +141,7 @@ export function EntryItem({
   const [menuPosition, setMenuPosition] = useState<{ top: number, left: number, width: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const closeTimeoutRef = useRef<NodeJS.Timeout>()
+  const openTimeoutRef = useRef<NodeJS.Timeout>()
 
   const updatePosition = () => {
     if (containerRef.current) {
@@ -156,12 +157,15 @@ export function EntryItem({
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
     if (!isMenuOpen) {
-      updatePosition()
-      setIsMenuOpen(true)
+      openTimeoutRef.current = setTimeout(() => {
+        updatePosition()
+        setIsMenuOpen(true)
+      }, 500)
     }
   }
 
   const handleMouseLeave = () => {
+    if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
     closeTimeoutRef.current = setTimeout(() => {
       setIsMenuOpen(false)
     }, 150)
@@ -192,6 +196,7 @@ export function EntryItem({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={() => {
+          if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
           updatePosition()
           setIsMenuOpen(true)
         }}
