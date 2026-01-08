@@ -38,8 +38,12 @@ export function FieldListView({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleEmptySpaceClick = (e: React.MouseEvent) => {
-    if (!isFocused && (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line'))) {
-      inputRef.current?.focus()
+    if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line')) {
+      if (isFocused) {
+        inputRef.current?.blur()
+      } else {
+        inputRef.current?.focus()
+      }
     }
   }
 
@@ -116,6 +120,7 @@ export function FieldListView({
             onUpdate={(id, text) => onUpdateEntry(list.id, id, text)}
             onDelete={(id) => onDeleteEntry(list.id, id)}
             onColorChange={(id, color) => onColorChange(list.id, id, color)}
+            disableActions={isFocused}
           />
         ))}
 
@@ -131,7 +136,12 @@ export function FieldListView({
             ref={inputRef}
             value={newEntryText}
             onChange={(e) => setNewEntryText(e.target.value)}
-            onFocus={() => setIsFocused(true)}
+            onFocus={() => {
+              setIsFocused(true)
+              setTimeout(() => {
+                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
             onBlur={() => {
               setIsFocused(false)
               handleAddEntry()

@@ -32,10 +32,15 @@ export function DayColumn({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleEmptySpaceClick = (e: React.MouseEvent) => {
-    // Only focus if clicking directly on the container or empty lines
-    // And not already focused (prevents re-focus loop)
-    if (!isFocused && (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line'))) {
-      inputRef.current?.focus()
+    // Only trigger on empty space (container or empty-line div)
+    if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line')) {
+      if (isFocused) {
+        // If already writing, clicking empty area should exit writing mode
+        inputRef.current?.blur()
+      } else {
+        // If not writing, clicking empty area should start writing
+        inputRef.current?.focus()
+      }
     }
   }
 
@@ -83,6 +88,7 @@ export function DayColumn({
             onUpdate={(id, text) => onUpdateEntry(day.date, id, text)}
             onDelete={(id) => onDeleteEntry(day.date, id)}
             onColorChange={(id, color) => onColorChange(day.date, id, color)}
+            disableActions={isFocused}
           />
         ))}
 
@@ -98,7 +104,13 @@ export function DayColumn({
             ref={inputRef}
             value={newEntryText}
             onChange={(e) => setNewEntryText(e.target.value)}
-            onFocus={() => setIsFocused(true)}
+            onFocus={() => {
+              setIsFocused(true)
+              // Scroll input into view so keyboard doesn't cover it
+              setTimeout(() => {
+                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
             onBlur={() => {
               setIsFocused(false)
               handleAddEntry()

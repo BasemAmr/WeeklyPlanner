@@ -14,6 +14,7 @@ interface EntryItemProps {
   onDelete: (id: string) => void
   onColorChange: (id: string, color: TaskColor) => void
   draggable?: boolean
+  disableActions?: boolean
 }
 
 interface ActionMenuProps {
@@ -170,7 +171,8 @@ export function EntryItem({
   onUpdate,
   onDelete,
   onColorChange,
-  draggable = true
+  draggable = true,
+  disableActions = false
 }: EntryItemProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editText, setEditText] = useState(entry.text)
@@ -236,6 +238,7 @@ export function EntryItem({
         onMouseDown={(e) => e.stopPropagation()} // Prevent document click from closing menu immediately
         onClick={(e) => {
           e.stopPropagation()
+          if (disableActions) return // Don't open menu if parent input is focused
           if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
           updatePosition()
           setIsMenuOpen(prev => !prev) // Toggle state instead of just setting true
