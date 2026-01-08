@@ -30,6 +30,7 @@ export function DayColumn({
   const [newEntryText, setNewEntryText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const handleEmptySpaceMouseDown = (e: React.MouseEvent) => {
     // Only trigger on empty space (container or empty-line div)
@@ -53,8 +54,13 @@ export function DayColumn({
     const attempts = [100, 300, 500]
     attempts.forEach(delay => {
       setTimeout(() => {
+        // Method 1: ScrollIntoView
         if (inputRef.current) {
           inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        // Method 2: Force container to scroll to bottom (where input is) - acts as fallback
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
         }
       }, delay)
     })
@@ -94,6 +100,7 @@ export function DayColumn({
       </div>
 
       <div
+        ref={scrollContainerRef}
         className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto slim-scrollbar pt-[0.4rem] pb-20"
         onMouseDown={handleEmptySpaceMouseDown}
       >

@@ -36,6 +36,7 @@ export function FieldListView({
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleText, setTitleText] = useState(list.title)
   const inputRef = useRef<HTMLInputElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const handleEmptySpaceMouseDown = (e: React.MouseEvent) => {
     if (e.target !== e.currentTarget && !(e.target as HTMLElement).classList.contains('empty-line')) {
@@ -54,8 +55,13 @@ export function FieldListView({
     const attempts = [100, 300, 500]
     attempts.forEach(delay => {
       setTimeout(() => {
+        // Method 1: ScrollIntoView
         if (inputRef.current) {
           inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        // Method 2: Force container to scroll to bottom - fallback
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
         }
       }, delay)
     })
@@ -123,6 +129,7 @@ export function FieldListView({
       </div>
 
       <div
+        ref={scrollContainerRef}
         className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto dreamy-scroll"
         onMouseDown={handleEmptySpaceMouseDown}
       >
