@@ -37,14 +37,28 @@ export function FieldListView({
   const [titleText, setTitleText] = useState(list.title)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleEmptySpaceClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line')) {
-      if (isFocused) {
-        inputRef.current?.blur()
-      } else {
-        inputRef.current?.focus()
-      }
+  const handleEmptySpaceMouseDown = (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget && !(e.target as HTMLElement).classList.contains('empty-line')) {
+      return
     }
+
+    if (document.activeElement === inputRef.current) {
+      // Let default behavior happen (blur)
+    } else {
+      e.preventDefault()
+      inputRef.current?.focus()
+    }
+  }
+
+  const scrollToInput = () => {
+    const attempts = [100, 300, 500]
+    attempts.forEach(delay => {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, delay)
+    })
   }
 
   // Sync titleText state when list.title prop changes (fixes title editing bug)
@@ -110,7 +124,7 @@ export function FieldListView({
 
       <div
         className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto dreamy-scroll"
-        onClick={handleEmptySpaceClick}
+        onMouseDown={handleEmptySpaceMouseDown}
       >
         {list.entries.map(entry => (
           <EntryItem
@@ -138,12 +152,10 @@ export function FieldListView({
             onChange={(e) => setNewEntryText(e.target.value)}
             onFocus={() => {
               setIsFocused(true)
-              setTimeout(() => {
-                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 300)
+              scrollToInput()
             }}
             onBlur={() => {
-              setIsFocused(false)
+              setTimeout(() => setIsFocused(false), 50)
               handleAddEntry()
             }}
             onKeyDown={(e) => {

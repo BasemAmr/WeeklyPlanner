@@ -31,17 +31,33 @@ export function DayColumn({
   const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleEmptySpaceClick = (e: React.MouseEvent) => {
+  const handleEmptySpaceMouseDown = (e: React.MouseEvent) => {
     // Only trigger on empty space (container or empty-line div)
-    if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('empty-line')) {
-      if (isFocused) {
-        // If already writing, clicking empty area should exit writing mode
-        inputRef.current?.blur()
-      } else {
-        // If not writing, clicking empty area should start writing
-        inputRef.current?.focus()
-      }
+    if (e.target !== e.currentTarget && !(e.target as HTMLElement).classList.contains('empty-line')) {
+      return
     }
+
+    // If input is currently focused
+    if (document.activeElement === inputRef.current) {
+      // Let default behavior happen (which is to blur the input)
+      // We don't need to do anything, the browser will blur it for us when clicking div
+    } else {
+      // If not focused, we want to focus it
+      e.preventDefault() // Prevent other side effects
+      inputRef.current?.focus()
+    }
+  }
+
+  const scrollToInput = () => {
+    // Attempt scroll multiple times to handle keyboard animation/viewport resize
+    const attempts = [100, 300, 500]
+    attempts.forEach(delay => {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, delay)
+    })
   }
 
   const handleAddEntry = () => {
@@ -49,6 +65,7 @@ export function DayColumn({
       onAddEntry(day.date, newEntryText.trim())
       setNewEntryText('')
     }
+    // Don't force blur here, let natural interaction handle it
   }
 
   const date = new Date(day.date)
@@ -78,7 +95,7 @@ export function DayColumn({
 
       <div
         className="flex-1 space-y-0 ruled-paper flex flex-col cursor-text overflow-y-auto slim-scrollbar pt-[0.4rem] pb-20"
-        onClick={handleEmptySpaceClick}
+        onMouseDown={handleEmptySpaceMouseDown}
       >
         {day.entries.map(entry => (
           <EntryItem
@@ -106,13 +123,12 @@ export function DayColumn({
             onChange={(e) => setNewEntryText(e.target.value)}
             onFocus={() => {
               setIsFocused(true)
-              // Scroll input into view so keyboard doesn't cover it
-              setTimeout(() => {
-                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 300)
+              scrollToInput()
             }}
             onBlur={() => {
-              setIsFocused(false)
+              // Small delay to allow click events to process before changing isFocused
+              // This helps with interactions like clicking "Done" buttons if we had them
+              setTimeout(() => setIsFocused(false), 50)
               handleAddEntry()
             }}
             onKeyDown={(e) => {
